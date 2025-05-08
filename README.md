@@ -48,30 +48,20 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Go to: [http://localhost:8000/docs](http://localhost:8000/docs) to try it out.
+Go to: [http://localhost:8000/docs] to try it out.
 
 ---
 
-##  Docker Support
+##  Docker
 
 ```bash
 docker build -t srivaniraob/mindscope-api:latest .
 docker run -d -p 8000:8000 srivaniraob/mindscope-api:latest
 ```
 
-To deploy to EC2, make sure to build for the right architecture (if you’re on a Mac with Apple silicon):
-
-```bash
-docker buildx create --use
-docker buildx inspect --bootstrap
-docker buildx build --platform linux/amd64 -t srivaniraob/mindscope-api:latest --push .
-```
-
----
-
 ## Deployed on AWS with Terraform
 
-This project includes a full infrastructure-as-code setup to deploy everything on AWS EC2:
+It also has full infrastructure-as-code setup to deploy everything on AWS EC2:
 
 - Provisions EC2 (Amazon Linux 2)
 - Installs Docker automatically using `user_data`
@@ -86,12 +76,6 @@ cd infra
 terraform init
 terraform apply
 ```
-
-Make sure to edit `terraform.tfvars` with:
-- Your key pair name
-- Public key path
-- Correct AMI ID
-- Your Docker image name
 
 Access the app at:
 ```
