@@ -106,7 +106,7 @@ I wanted something that:
 - Required minimal setup for reviewers
 - Reflected how I’d build an API in real life
 
-So I went with FastAPI, SQLite, JWT, and containerized deployment with Terraform on AWS. It felt natural and practical.
+So I went with FastAPI, SQLite, JWT, and containerized deployment with Terraform on AWS.
 
 ---
 
