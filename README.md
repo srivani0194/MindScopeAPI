@@ -83,5 +83,4 @@ As per point (b): “Design and implement an API server with authentication and 
 * Rate limiting with `slowapi` – done
 * A working API server with real endpoints and documentation – done
 
-I also added a summary feature because it felt useful.
 ---
