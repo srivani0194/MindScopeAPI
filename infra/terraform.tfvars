@@ -1,0 +1,6 @@
+aws_region      = "us-west-2"
+key_pair_name   = "mindscope-key"
+public_key_path = "~/.ssh/mindscope-key.pub"
+ami_id          = "ami-08a0cbdcdcbc08448"
+instance_type   = "t2.micro"
+docker_image    = "srivaniraob/mindscope-api:latest"

@@ -1,41 +1,43 @@
 # MindScope – Mood & Energy Tracker API
 
-I built this app as part of a take-home challenge. I wanted it to be simple, clean, and something I’d actually enjoy using if I were logging how I feel every day. It’s basically a mood and activity tracker that’s fully backend-powered, with auth and rate limiting built-in.
-
-If you’re reading this — thanks for reviewing!
+Hi, I’m Srivani — I built this app as part of a take-home challenge. My goal was to create something simple but meaningful — the kind of app I’d actually use. MindScope lets users track how they’re feeling and what’s affecting their energy each day. It’s secure, lightweight, and easy to deploy anywhere.
 
 ---
 
-## What It Does
+##  What It Does
 
-* Users can register, log in, and get a secure JWT token
-* You can track your mood, energy, and activity for any day
-* Rate limiting: 20 requests per minute globally, 5 per minute on mood creation
-* `/summary` route shows how your week’s been (Happy, Sad, etc.)
-* Swagger UI at `/docs` makes it easy to explore and test everything
-
----
-
-## Tech I Used
-
-* FastAPI – fast, clean, and modern
-* SQLite – lightweight and perfect for local builds
-* SQLAlchemy – ORM to make database work easier
-* JWT via `python-jose` – for secure authentication
-* Rate limiting via `slowapi`
-* Password hashing – using `passlib[bcrypt]`
+- Users can register, log in, and receive a secure JWT token
+- Track mood, energy, and activity for any day
+- Global rate limit: 20 requests per minute
+- Route-level limit: 5 requests/minute for mood creation
+- `/summary` endpoint shows a quick emotional snapshot of the week
+- Swagger UI at `/docs` to test everything without external tools
 
 ---
 
-## Auth and Rate Limiting
+##  Tech Stack
 
-* All mood routes are JWT-protected
-* Global limit: 20 requests per minute
-* `POST /mood`: tighter limit of 5 per minute
+- **FastAPI** – fast, clean Python framework
+- **SQLite** – simple and portable database
+- **SQLAlchemy** – ORM for easy database modeling
+- **JWT with python-jose** – for stateless, secure login
+- **SlowAPI** – for applying clean and controlled rate limits
+- **passlib (bcrypt)** – secure password hashing
+- **Docker** – containerized for portability
+- **Terraform** – infrastructure-as-code
+- **AWS EC2** – deployed and running in the cloud
 
 ---
 
-## How to Run It
+##  Auth & Rate Limiting
+
+- All protected routes require JWT
+- Global rate limit: `20 req/min`
+- POST `/mood`: `5 req/min` to prevent abuse
+
+---
+
+##  Run Locally
 
 ```bash
 git clone https://github.com/your-username/mindscope.git
@@ -46,11 +48,59 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Then go to: [http://localhost:8000/docs](http://localhost:8000/docs) and test away.
+Go to: [http://localhost:8000/docs](http://localhost:8000/docs) to try it out.
 
 ---
 
-## Sample Weekly Summary
+##  Docker Support
+
+```bash
+docker build -t srivaniraob/mindscope-api:latest .
+docker run -d -p 8000:8000 srivaniraob/mindscope-api:latest
+```
+
+To deploy to EC2, make sure to build for the right architecture (if you’re on a Mac with Apple silicon):
+
+```bash
+docker buildx create --use
+docker buildx inspect --bootstrap
+docker buildx build --platform linux/amd64 -t srivaniraob/mindscope-api:latest --push .
+```
+
+---
+
+## Deployed on AWS with Terraform
+
+This project includes a full infrastructure-as-code setup to deploy everything on AWS EC2:
+
+- Provisions EC2 (Amazon Linux 2)
+- Installs Docker automatically using `user_data`
+- Pulls and runs your Docker container
+- Opens port `8000` via a security group
+- Attaches an Elastic IP for a stable public address
+
+**To deploy:**
+
+```bash
+cd infra
+terraform init
+terraform apply
+```
+
+Make sure to edit `terraform.tfvars` with:
+- Your key pair name
+- Public key path
+- Correct AMI ID
+- Your Docker image name
+
+Access the app at:
+```
+http://http://52.36.231.28:8000/docs
+```
+
+---
+
+##  Sample Weekly Summary Output
 
 ```json
 {
@@ -65,22 +115,29 @@ Then go to: [http://localhost:8000/docs](http://localhost:8000/docs) and test aw
 
 ---
 
-## Why This Stack?
+##  Why This Stack?
 
-* FastAPI helped me build and test quickly
-* SQLite was just right for a local app
-* JWT made auth secure but lightweight
-* I added rate limiting because it's practical and often overlooked
-* Swagger UI was super helpful for testing without needing a frontend
+I wanted something that:
+- Was fast to prototype but clean to maintain
+- Required minimal setup for reviewers
+- Reflected how I’d build an API in real life
+
+So I went with FastAPI, SQLite, JWT, and containerized deployment with Terraform on AWS. It felt natural and practical.
+
+---
+
+##  Challenge Requirements – Covered
+
+###  Point (a): Containerized web app deployed on cloud
+- Dockerized and published to Docker Hub
+- Deployed on AWS EC2 via Terraform (infra-as-code)
+
+###  Point (b): Build an API server with auth + rate limiting
+- JWT-based login, hashed passwords
+- Global + endpoint-specific rate limits with `slowapi`
+- Interactive Swagger docs at `/docs`
+- Bonus: `/summary` route to visualize logged data over time
 
 ---
 
-## Challenge Requirements – Covered
 
-As per point (b): “Design and implement an API server with authentication and rate limiting”
-
-* Auth with hashed passwords and JWT – done
-* Rate limiting with `slowapi` – done
-* A working API server with real endpoints and documentation – done
-
----
